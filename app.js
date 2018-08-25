@@ -13,7 +13,7 @@ app.set('view engine', 'pug');
 app.use('/static', express.static('stylesheets'));
 
 // Load routes
-const routes = require('./routes');
+const routes = require('./js/routes');
 app.use(routes);
 
 // Error handling route if no route is found
@@ -28,7 +28,4 @@ app.use((err, req, res, next) => {
     res.render('error');
 });
   
-// Listen on port 3000
-app.listen(3000, () => {
-    console.log('The server is running on port 3000');
-});
+module.exports = app;

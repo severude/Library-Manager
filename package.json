@@ -4,13 +4,9 @@
   "description": "Build a Library Manager",
   "author": "Dale Severude",
   "license": "MIT",
-  "main": "./js/app.js",
+  "main": "./bin/www",
   "scripts": {
-    "start": "node ./js/app.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/severude/Library-Manager"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
