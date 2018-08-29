@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 // Setup views to load pug templates
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'pug');
 

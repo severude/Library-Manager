@@ -1,22 +1,46 @@
 // Routing declarations
 const express = require('express');
 const router = express.Router();
+const Book = require("../models").books;
 
 // Render home page route
 router.get('/', (req, res) => {
     res.render('home');
 });
-router.get('/all_books', (req, res) => {
-    res.render('all_books');
-});
-router.get('/all_loans', (req, res) => {
-    res.render('all_loans');
-});
-router.get('/all_patrons', (req, res) => {
-    res.render('all_patrons');
+
+// Book Routes
+router.get('/books', (req, res) => {
+    Book.findAll().then(function(books){
+        res.render('all_books', {books:books});
+    });
 });
 router.get('/new_book', (req, res) => {
-    res.render('new_book');
+    res.render('new_book', {
+        book: Book.build(req.body)
+    });
+});
+router.post('/new_book', function(req, res, next) {
+    Book.create(req.body).then(function(){
+        res.redirect('/books');
+    }).catch(function(err){
+        if(err.name === "SequelizeValidationError") {
+            res.render("new_book", {
+              book: Book.build(req.body),
+              errors: err.errors
+            });
+          } else {
+            throw err;
+          }
+    }).catch(function(err){
+        res.status(500).send(err);
+    });
+});
+
+router.get('/loans', (req, res) => {
+    res.render('all_loans');
+});
+router.get('/patrons', (req, res) => {
+    res.render('all_patrons');
 });
 router.get('/overdue_books', (req, res) => {
     res.render('overdue_books');
