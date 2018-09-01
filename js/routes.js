@@ -1,9 +1,9 @@
 // Routing declarations
 const express = require('express');
 const router = express.Router();
-const Book = require("../models").books;
-const Loan = require("../models").loans;
-const Patron = require("../models").patrons;
+const Book = require("../models").Book;
+const Loan = require("../models").Loan;
+const Patron = require("../models").Patron;
 
 // Render home page route
 router.get('/', (req, res) => {
