@@ -61,7 +61,25 @@ router.get('/loans', (req, res) => {
     });
 });
 router.get('/new_loan', (req, res) => {
-    res.render('new_loan');
+    res.render('new_loan', {
+        loan: Loan.build(req.body)
+    });
+});
+router.post('/new_loan', (req, res) => {
+    Loan.create(req.body).then(function(){
+        res.redirect('/loans');
+    }).catch(function(err){
+        if(err.name === "SequelizeValidationError") {
+            res.render("new_loan", {
+              loan: Loan.build(req.body),
+              errors: err.errors
+            });
+          } else {
+            throw err;
+          }
+    }).catch(function(err){
+        res.status(500);
+    });
 });
 router.get('/overdue_loans', (req, res) => {
     res.render('overdue_loans');
@@ -79,7 +97,25 @@ router.get('/patrons', (req, res) => {
     });
 });
 router.get('/new_patron', (req, res) => {
-    res.render('new_patron');
+    res.render('new_patron', {
+        patron: Patron.build(req.body)
+    });
+});
+router.post('/new_patron', (req, res) => {
+    Patron.create(req.body).then(function(){
+        res.redirect('/patrons');
+    }).catch(function(err){
+        if(err.name === "SequelizeValidationError") {
+            res.render("new_patron", {
+              patron: Patron.build(req.body),
+              errors: err.errors
+            });
+          } else {
+            throw err;
+          }
+    }).catch(function(err){
+        res.status(500);
+    });
 });
 router.get('/patron_detail', (req, res) => {
     res.render('patron_detail');

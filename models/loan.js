@@ -1,11 +1,33 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Loan = sequelize.define('Loan', {
-    book_id: DataTypes.INTEGER,
-    patron_id: DataTypes.INTEGER,
-    loaned_on: DataTypes.DATE,
-    return_by: DataTypes.DATE,
-    returned_on: DataTypes.DATE
+    book_id: {
+      type: DataTypes.INTEGER,
+      required: true
+    },
+    patron_id: {
+      type: DataTypes.INTEGER,
+      required: true
+    },
+    loaned_on: {
+      type: DataTypes.DATE,
+      validate: {
+        notEmpty: {
+          msg: "Date is required"
+        }
+      }
+    },
+    return_by: {
+      type: DataTypes.DATE,
+      validate: {
+        notEmpty: {
+          msg: "Date is required"
+        }
+      }
+    },
+    returned_on: {
+      type: DataTypes.DATE
+    }
   }, { 
     timestamps: false,
     underscored: true
