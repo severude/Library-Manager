@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Book.associate = function(models) {
     // associations can be defined here
+    Book.hasMany(models.Loan, {foreignKey: 'book_id'});
   };
   return Book;
 };

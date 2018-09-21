@@ -4,6 +4,7 @@ const router = express.Router();
 const Book = require("../models").Book;
 const Loan = require("../models").Loan;
 const Patron = require("../models").Patron;
+// const Op = Sequelize.Op;
 
 // Render home page route
 router.get('/', (req, res) => {
@@ -54,7 +55,12 @@ router.get('/return_book', (req, res) => {
 
 // Loan routes
 router.get('/loans', (req, res) => {
-    Loan.findAll().then(function(loans){
+    Loan.findAll({
+        include: [
+            {model: Book},
+            {model: Patron}
+        ]
+    }).then(function(loans){
         res.render('all_loans', {loans:loans});
     }).catch(function(err) {
         res.status(500);

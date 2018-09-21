@@ -5,7 +5,8 @@ block head
 
 block content
   h1 New Loan
-  form
+  include error
+  form(method='POST' action='/new_loan')
     p
       label(for='book_id') Book
       select#book_id
@@ -24,6 +25,8 @@ block content
         option(value='13') Armada
         option(value='14') Pride and Prejudice
         option(value='15') Emma
+        //- each book in books
+        //-   option(value=book.id) #{book.title}      
     p
       label(for='patron_id') Patron
       select#patron_id
