@@ -67,8 +67,24 @@ router.get('/loans', (req, res) => {
     });
 });
 router.get('/new_loan', (req, res) => {
-    res.render('new_loan', {
-        loan: Loan.build(req.body)
+    const date = new Date();
+    const today = date.toLocaleDateString();
+    date.setDate(date.getDate() + 7);
+    const dueDate = date.toLocaleDateString();    
+    
+    Book.findAll()
+    .then(books => {
+        Patron.findAll()
+        .then(patrons => {
+            res.render('new_loan', {
+                books: books,
+                patrons: patrons,
+                today: today,
+                dueDate: dueDate
+            });
+        });
+    }).catch(function(err) {
+        res.status(500);
     });
 });
 router.post('/new_loan', (req, res) => {
