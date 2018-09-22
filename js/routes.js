@@ -13,9 +13,9 @@ router.get('/', (req, res) => {
 
 // Book routes
 router.get('/books', (req, res) => {
-    Book.findAll().then(function(books){
+    Book.findAll().then(books => {
         res.render('all_books', {books:books});
-    }).catch(function(err) {
+    }).catch(err => {
         res.status(500);
     });
 });
@@ -24,10 +24,10 @@ router.get('/new_book', (req, res) => {
         book: Book.build(req.body)
     });
 });
-router.post('/new_book', function(req, res, next) {
-    Book.create(req.body).then(function(){
+router.post('/new_book', (req, res, next) => {
+    Book.create(req.body).then(book => {
         res.redirect('/books');
-    }).catch(function(err){
+    }).catch(err => {
         if(err.name === "SequelizeValidationError") {
             res.render("new_book", {
               book: Book.build(req.body),
@@ -36,7 +36,7 @@ router.post('/new_book', function(req, res, next) {
           } else {
             throw err;
           }
-    }).catch(function(err){
+    }).catch(err => {
         res.status(500);
     });
 });
@@ -60,9 +60,9 @@ router.get('/loans', (req, res) => {
             {model: Book},
             {model: Patron}
         ]
-    }).then(function(loans){
+    }).then(loans => {
         res.render('all_loans', {loans:loans});
-    }).catch(function(err) {
+    }).catch(err => {
         res.status(500);
     });
 });
@@ -83,14 +83,14 @@ router.get('/new_loan', (req, res) => {
                 dueDate: dueDate
             });
         });
-    }).catch(function(err) {
+    }).catch(err => {
         res.status(500);
     });
 });
-router.post('/new_loan', (req, res) => {
-    Loan.create(req.body).then(function(){
+router.post('/new_loan', (req, res, next) => {
+    Loan.create(req.body).then(loan => {
         res.redirect('/loans');
-    }).catch(function(err){
+    }).catch(err => {
         if(err.name === "SequelizeValidationError") {
             res.render("new_loan", {
               loan: Loan.build(req.body),
@@ -99,7 +99,7 @@ router.post('/new_loan', (req, res) => {
           } else {
             throw err;
           }
-    }).catch(function(err){
+    }).catch(err => {
         res.status(500);
     });
 });
@@ -112,9 +112,9 @@ router.get('/checked_loans', (req, res) => {
 
 // Patron routes
 router.get('/patrons', (req, res) => {
-    Patron.findAll().then(function(patrons){
+    Patron.findAll().then(patrons => {
         res.render('all_patrons', {patrons:patrons});
-    }).catch(function(err) {
+    }).catch(err => {
         res.status(500);
     });
 });
@@ -124,9 +124,9 @@ router.get('/new_patron', (req, res) => {
     });
 });
 router.post('/new_patron', (req, res) => {
-    Patron.create(req.body).then(function(){
+    Patron.create(req.body).then(patron => {
         res.redirect('/patrons');
-    }).catch(function(err){
+    }).catch(err => {
         if(err.name === "SequelizeValidationError") {
             res.render("new_patron", {
               patron: Patron.build(req.body),
@@ -135,7 +135,7 @@ router.post('/new_patron', (req, res) => {
           } else {
             throw err;
           }
-    }).catch(function(err){
+    }).catch(err => {
         res.status(500);
     });
 });
