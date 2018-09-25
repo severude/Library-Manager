@@ -3,31 +3,44 @@ module.exports = (sequelize, DataTypes) => {
   var Loan = sequelize.define('Loan', {
     book_id: {
       type: DataTypes.INTEGER,
-      required: true
+      validate: {
+        isNumeric: {
+          msg: "Book ID should be numeric"
+        }
+      }
     },
     patron_id: {
       type: DataTypes.INTEGER,
-      required: true
+      validate: {
+        isNumeric: {
+          msg: "Patron ID should be numeric"
+        }
+      }
     },
     loaned_on: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       validate: {
-        notEmpty: {
-          msg: "Date is required"
+        isDate: {
+          msg: "Loaned On should be a date YYYY-MM-DD"
         }
       }
     },
     return_by: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       validate: {
-        notEmpty: {
-          msg: "Date is required"
+        isDate: {
+          msg: "Return By should be a date YYYY-MM-DD"
         }
       }
     },
     returned_on: {
-      type: DataTypes.DATE
-    }
+      type: DataTypes.DATEONLY,
+      validate: {
+        isDate: {
+          msg: "Returned On should be a date YYYY-MM-DD"
+        }
+      }
+  }
   }, { 
     timestamps: false
   });

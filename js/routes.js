@@ -79,8 +79,8 @@ router.get('/new_loan', (req, res) => {
             res.render('new_loan', {
                 books: books,
                 patrons: patrons,
-                today: today,
-                dueDate: dueDate
+                loaned_on: today,
+                return_by: dueDate
             });
         });
     }).catch(err => {
@@ -88,15 +88,27 @@ router.get('/new_loan', (req, res) => {
     });
 });
 router.post('/new_loan', (req, res, next) => {
+    const {loaned_on, return_by} = req.body;
     Loan.create(req.body).then(loan => {
         res.redirect('/loans');
     }).catch(err => {
         if(err.name === "SequelizeValidationError") {
-            res.render("new_loan", {
-              loan: Loan.build(req.body),
-              errors: err.errors
+            Book.findAll()
+            .then(books => {
+                Patron.findAll()
+                .then(patrons => {
+                    res.render('new_loan', {
+                        errors: err.errors,
+                        books,
+                        patrons,
+                        loaned_on,
+                        return_by
+                    });
+                });
+            }).catch(err => {
+                res.status(500);
             });
-          } else {
+        } else {
             throw err;
           }
     }).catch(err => {
