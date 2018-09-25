@@ -149,10 +149,41 @@ router.post('/new_loan', (req, res, next) => {
     });
 });
 router.get('/overdue_loans', (req, res) => {
-    res.render('overdue_loans');
+    Loan.findAll({
+        include: [
+            {model: Book},
+            {model: Patron}
+        ],
+        where: {
+            return_by: { 
+                [Op.lt]: Date.now() 
+            },
+            returned_on: {
+                [Op.eq]: null
+            }
+        }
+    }).then(loans => {
+        res.render('overdue_loans', {loans:loans});
+    }).catch(err => {
+        res.status(500);
+    });
 });
 router.get('/checked_loans', (req, res) => {
-    res.render('checked_loans');
+    Loan.findAll({
+        include: [
+            {model: Book},
+            {model: Patron}
+        ],
+        where : {
+            returned_on: {
+                [Op.eq]: null
+            }
+        }
+    }).then(loans => {
+        res.render('checked_loans', {loans:loans});
+    }).catch(err => {
+        res.status(500);
+    });
 });
 
 // Patron routes
