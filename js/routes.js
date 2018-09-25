@@ -4,7 +4,8 @@ const router = express.Router();
 const Book = require("../models").Book;
 const Loan = require("../models").Loan;
 const Patron = require("../models").Patron;
-// const Op = Sequelize.Op;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 // Render home page route
 router.get('/', (req, res) => {
@@ -40,11 +41,43 @@ router.post('/new_book', (req, res, next) => {
         res.status(500);
     });
 });
-router.get('/overdue_books', (req, res) => {
-    res.render('overdue_books');
-});
 router.get('/checked_books', (req, res) => {
-    res.render('checked_books');
+    Book.findAll({
+        include: [{
+            model: Loan,
+            where: {
+                loaned_on: { 
+                    [Op.lt]: Date.now() 
+                },
+                returned_on: { 
+                    [Op.eq]: null 
+                }
+            }
+        }]
+    }).then(books => {
+        res.render('checked_books', {books:books});
+    }).catch(err => {
+        res.status(500);
+    });
+});
+router.get('/overdue_books', (req, res) => {
+    Book.findAll({
+        include: [{
+            model: Loan,
+            where: {
+                return_by: { 
+                    [Op.lt]: Date.now() 
+                },
+                returned_on: { 
+                    [Op.eq]:  null
+                }
+            }
+        }]
+    }).then(books => {
+        res.render('overdue_books', {books:books});
+    }).catch(err => {
+        res.status(500);
+    });
 });
 router.get('/book_detail', (req, res) => {
     res.render('book_detail');
