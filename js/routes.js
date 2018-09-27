@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 // Book routes
 router.get('/books', (req, res) => {
     Book.findAll().then(books => {
-        res.render('all_books', {books:books});
+        res.render('all_books', {books});
     }).catch(err => {
         res.status(500);
     });
@@ -55,7 +55,7 @@ router.get('/checked_books', (req, res) => {
             }
         }]
     }).then(books => {
-        res.render('checked_books', {books:books});
+        res.render('checked_books', {books});
     }).catch(err => {
         res.status(500);
     });
@@ -74,16 +74,13 @@ router.get('/overdue_books', (req, res) => {
             }
         }]
     }).then(books => {
-        res.render('overdue_books', {books:books});
+        res.render('overdue_books', {books});
     }).catch(err => {
         res.status(500);
     });
 });
 router.get('/book_detail', (req, res) => {
     res.render('book_detail');
-});
-router.get('/return_book', (req, res) => {
-    res.render('return_book');
 });
 
 // Loan routes
@@ -94,7 +91,7 @@ router.get('/loans', (req, res) => {
             {model: Patron}
         ]
     }).then(loans => {
-        res.render('all_loans', {loans:loans});
+        res.render('all_loans', {loans});
     }).catch(err => {
         res.status(500);
     });
@@ -163,7 +160,7 @@ router.get('/overdue_loans', (req, res) => {
             }
         }
     }).then(loans => {
-        res.render('overdue_loans', {loans:loans});
+        res.render('overdue_loans', {loans});
     }).catch(err => {
         res.status(500);
     });
@@ -180,7 +177,24 @@ router.get('/checked_loans', (req, res) => {
             }
         }
     }).then(loans => {
-        res.render('checked_loans', {loans:loans});
+        res.render('checked_loans', {loans});
+    }).catch(err => {
+        res.status(500);
+    });
+});
+router.get('/return_book/:id', (req, res) => {
+    const date = new Date();
+    const today = date.toLocaleDateString();
+    Loan.findOne({
+        include: [
+            {model: Book},
+            {model: Patron}
+        ],
+        where: {
+            id: req.params.id
+        }
+    }).then(loan => {
+        res.render('return_book', {loan, today});
     }).catch(err => {
         res.status(500);
     });
@@ -189,7 +203,7 @@ router.get('/checked_loans', (req, res) => {
 // Patron routes
 router.get('/patrons', (req, res) => {
     Patron.findAll().then(patrons => {
-        res.render('all_patrons', {patrons:patrons});
+        res.render('all_patrons', {patrons});
     }).catch(err => {
         res.status(500);
     });

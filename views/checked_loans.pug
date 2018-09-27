@@ -34,4 +34,4 @@ block content
           td #{loan.return_by}
           td #{loan.returned_on}
           td
-            a.button(href='/return_book') Return Book
+            a.button(href=`/return_book/${loan.id}`) Return Book
