@@ -79,8 +79,21 @@ router.get('/overdue_books', (req, res) => {
         res.status(500);
     });
 });
-router.get('/book_detail', (req, res) => {
-    res.render('book_detail');
+router.get('/book_detail/:id', (req, res) => {
+    Book.findById(req.params.id)
+    .then(book => {
+        Loan.findAll({
+            include: [
+                {model: Book},
+                {model: Patron}
+            ],
+            where: {
+                id: req.params.id
+            }
+        }).then(loans => {
+            res.render('book_detail', {book, loans});
+        })
+    })
 });
 
 // Loan routes
@@ -229,8 +242,11 @@ router.post('/new_patron', (req, res) => {
         res.status(500);
     });
 });
-router.get('/patron_detail', (req, res) => {
-    res.render('patron_detail');
+router.get('/patron_detail/:id', (req, res) => {
+    Patron.findById(req.params.id)
+    .then(patron => {
+        res.render('patron_detail', {patron});
+    })
 });
 
 module.exports = router;
