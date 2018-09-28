@@ -88,7 +88,7 @@ router.get('/book_detail/:id', (req, res) => {
                 {model: Patron}
             ],
             where: {
-                id: req.params.id
+                book_id: req.params.id
             }
         }).then(loans => {
             res.render('book_detail', {book, loans});
@@ -245,7 +245,17 @@ router.post('/new_patron', (req, res) => {
 router.get('/patron_detail/:id', (req, res) => {
     Patron.findById(req.params.id)
     .then(patron => {
-        res.render('patron_detail', {patron});
+        Loan.findAll({
+            include: [
+                {model: Book},
+                {model: Patron}
+            ],
+            where: {
+                patron_id: req.params.id
+            }
+        }).then(loans => {
+            res.render('patron_detail', {patron, loans});
+        })
     })
 });
 
