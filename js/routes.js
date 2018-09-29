@@ -207,9 +207,33 @@ router.get('/return_book/:id', (req, res) => {
             id: req.params.id
         }
     }).then(loan => {
-        res.render('return_book', {loan, today});
+        res.render('return_book', {loan, returned_on:today});
     }).catch(err => {
         res.status(500);
+    });
+});
+router.put('/return_book/:id', (req, res, next) => {
+    Loan.findById(req.params.id)
+    .then(loan => loan.update(req.body))
+    .then(() => res.redirect('/loans'))
+    .catch(err => {
+        if(err.name === "SequelizeValidationError") {
+            Loan.findOne({
+                include: [
+                    {model: Book},
+                    {model: Patron}
+                ],
+                where: {
+                    id: req.params.id
+                }
+            }).then(loan => {
+                const date = new Date();
+                const today = date.toLocaleDateString();
+                res.render('return_book', {loan, returned_on:today});
+            });
+        } else {
+            throw(err);
+        }
     });
 });
 

@@ -1,11 +1,13 @@
 // App requirements
 const express = require('express');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
 // Declare app as an Express project
 const app = express();
 
 // Setup views to load pug templates
+app.use(methodOverride('_method'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'pug');
