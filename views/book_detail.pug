@@ -5,7 +5,8 @@ block head
 
 block content
   h1 Book: #{book.title}
-  form(method="POST" action='/books')
+  include error
+  form(method="POST" action=`/book_detail/${book.id}?_method=PUT`)
     p
       label(for='title') Title
       input#title(type='text' name='title' value=book.title)

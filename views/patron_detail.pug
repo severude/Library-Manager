@@ -5,7 +5,8 @@ block head
 
 block content
   h1 Patron: #{patron.first_name} #{patron.last_name}
-  form
+  include error
+  form(method="POST" action=`/patron_detail/${patron.id}?_method=PUT`)
     p
       label(for='first_name') First Name
       input#first_name(type='text' name='first_name' value=patron.first_name)

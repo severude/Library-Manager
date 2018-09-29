@@ -95,6 +95,31 @@ router.get('/book_detail/:id', (req, res) => {
         })
     })
 });
+router.put('/book_detail/:id', (req, res, next) => {
+    Book.findById(req.params.id)
+    .then(book => book.update(req.body))
+    .then(() => res.redirect('/books'))
+    .catch(err => {
+        if(err.name === "SequelizeValidationError") {
+            Book.findById(req.params.id)
+            .then(book => {
+                Loan.findAll({
+                    include: [
+                        {model: Book},
+                        {model: Patron}
+                    ],
+                    where: {
+                        book_id: req.params.id
+                    }
+                }).then(loans => {
+                    res.render('book_detail', {book, loans, errors: err.errors});
+                })
+            })
+        } else {
+            throw(err);
+        }
+    });
+});
 
 // Loan routes
 router.get('/loans', (req, res) => {
@@ -229,7 +254,7 @@ router.put('/return_book/:id', (req, res, next) => {
             }).then(loan => {
                 const date = new Date();
                 const today = date.toLocaleDateString();
-                res.render('return_book', {loan, returned_on:today});
+                res.render('return_book', {loan, returned_on:today, errors: err.errors});
             });
         } else {
             throw(err);
@@ -281,6 +306,31 @@ router.get('/patron_detail/:id', (req, res) => {
             res.render('patron_detail', {patron, loans});
         })
     })
+});
+router.put('/patron_detail/:id', (req, res, next) => {
+    Patron.findById(req.params.id)
+    .then(patron => patron.update(req.body))
+    .then(() => res.redirect('/patrons'))
+    .catch(err => {
+        if(err.name === "SequelizeValidationError") {
+            Patron.findById(req.params.id)
+            .then(patron => {
+                Loan.findAll({
+                    include: [
+                        {model: Book},
+                        {model: Patron}
+                    ],
+                    where: {
+                        patron_id: req.params.id
+                    }
+                }).then(loans => {
+                    res.render('patron_detail', {patron, loans, errors: err.errors});
+                })
+            })
+                } else {
+            throw(err);
+        }
+    });
 });
 
 module.exports = router;
