@@ -1,18 +1,21 @@
 // Routing declarations
 const express = require('express');
 const router = express.Router();
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const Book = require("../models").Book;
 const Loan = require("../models").Loan;
 const Patron = require("../models").Patron;
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 
 // Render home page route
 router.get('/', (req, res) => {
     res.render('home');
 });
 
+
 // Book routes
+
+// Show all books
 router.get('/books', (req, res) => {
     Book.findAll().then(books => {
         res.render('all_books', {books});
@@ -20,11 +23,15 @@ router.get('/books', (req, res) => {
         res.status(500);
     });
 });
+
+// Show form for new book
 router.get('/new_book', (req, res) => {
     res.render('new_book', {
         book: Book.build(req.body)
     });
 });
+
+// Post new book and redirect to books page
 router.post('/new_book', (req, res, next) => {
     Book.create(req.body).then(book => {
         res.redirect('/books');
@@ -41,6 +48,8 @@ router.post('/new_book', (req, res, next) => {
         res.status(500);
     });
 });
+
+// Show all checked out books
 router.get('/checked_books', (req, res) => {
     Book.findAll({
         include: [{
@@ -60,6 +69,8 @@ router.get('/checked_books', (req, res) => {
         res.status(500);
     });
 });
+
+// Show all overdue books
 router.get('/overdue_books', (req, res) => {
     Book.findAll({
         include: [{
@@ -79,6 +90,8 @@ router.get('/overdue_books', (req, res) => {
         res.status(500);
     });
 });
+
+// Show individual book detail
 router.get('/book_detail/:id', (req, res) => {
     Book.findById(req.params.id)
     .then(book => {
@@ -95,6 +108,8 @@ router.get('/book_detail/:id', (req, res) => {
         })
     })
 });
+
+// Update individual book detail
 router.put('/book_detail/:id', (req, res, next) => {
     Book.findById(req.params.id)
     .then(book => book.update(req.body))
@@ -121,7 +136,10 @@ router.put('/book_detail/:id', (req, res, next) => {
     });
 });
 
+
 // Loan routes
+
+// Show all loans
 router.get('/loans', (req, res) => {
     Loan.findAll({
         include: [
@@ -134,6 +152,8 @@ router.get('/loans', (req, res) => {
         res.status(500);
     });
 });
+
+// Form for new loan
 router.get('/new_loan', (req, res) => {
     const date = new Date();
     const today = date.toLocaleDateString();
@@ -155,6 +175,8 @@ router.get('/new_loan', (req, res) => {
         res.status(500);
     });
 });
+
+// Post new loan and redirect to loans page
 router.post('/new_loan', (req, res, next) => {
     const {loaned_on, return_by} = req.body;
     Loan.create(req.body).then(loan => {
@@ -183,6 +205,8 @@ router.post('/new_loan', (req, res, next) => {
         res.status(500);
     });
 });
+
+// Show all overdue loans
 router.get('/overdue_loans', (req, res) => {
     Loan.findAll({
         include: [
@@ -203,6 +227,8 @@ router.get('/overdue_loans', (req, res) => {
         res.status(500);
     });
 });
+
+// Show all checked out loans
 router.get('/checked_loans', (req, res) => {
     Loan.findAll({
         include: [
@@ -220,6 +246,8 @@ router.get('/checked_loans', (req, res) => {
         res.status(500);
     });
 });
+
+// Show form to return an individual book
 router.get('/return_book/:id', (req, res) => {
     const date = new Date();
     const today = date.toLocaleDateString();
@@ -237,6 +265,8 @@ router.get('/return_book/:id', (req, res) => {
         res.status(500);
     });
 });
+
+// Return an individual book
 router.put('/return_book/:id', (req, res, next) => {
     Loan.findById(req.params.id)
     .then(loan => loan.update(req.body))
@@ -262,7 +292,10 @@ router.put('/return_book/:id', (req, res, next) => {
     });
 });
 
+
 // Patron routes
+
+// Show all patrons
 router.get('/patrons', (req, res) => {
     Patron.findAll().then(patrons => {
         res.render('all_patrons', {patrons});
@@ -270,11 +303,15 @@ router.get('/patrons', (req, res) => {
         res.status(500);
     });
 });
+
+// Show form for new patron
 router.get('/new_patron', (req, res) => {
     res.render('new_patron', {
         patron: Patron.build(req.body)
     });
 });
+
+// Post new patron and redirect to patrons page
 router.post('/new_patron', (req, res) => {
     Patron.create(req.body).then(patron => {
         res.redirect('/patrons');
@@ -291,6 +328,8 @@ router.post('/new_patron', (req, res) => {
         res.status(500);
     });
 });
+
+// Show individual patron detail
 router.get('/patron_detail/:id', (req, res) => {
     Patron.findById(req.params.id)
     .then(patron => {
@@ -307,6 +346,8 @@ router.get('/patron_detail/:id', (req, res) => {
         })
     })
 });
+
+// Update individual patron detail
 router.put('/patron_detail/:id', (req, res, next) => {
     Patron.findById(req.params.id)
     .then(patron => patron.update(req.body))
