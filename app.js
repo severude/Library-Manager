@@ -16,8 +16,11 @@ app.set('view engine', 'pug');
 app.use('/static', express.static('stylesheets'));
 
 // Load routes
-const routes = require('./js/routes');
-app.use(routes);
+const index = require('./routes/index');
+const books = require('./routes/books');
+const patrons = require('./routes/patrons');
+const loans = require('./routes/loans');
+app.use(index, books, patrons, loans);
 
 // Error handling route if no route is found
 app.use((req, res, next) => {
