@@ -6,7 +6,7 @@ block head
 block content
   h1 New Book
   include error
-  form(method='POST' action='/new_book')
+  form(method='POST' action='/books/new_book')
     p
       label(for='title') Title
       input#title(type='text' name='title' value=book.title)

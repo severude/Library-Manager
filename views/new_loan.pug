@@ -6,7 +6,7 @@ block head
 block content
   h1 New Loan
   include error
-  form(method='POST' action='/new_loan')
+  form(method='POST' action='/loans/new_loan')
     p
       label(for='book_id') Book
       select#book_id(name='book_id')

@@ -10,7 +10,7 @@ const Patron = require("../models").Patron;
 // Loan routes
 
 // Show all loans
-router.get('/loans', (req, res) => {
+router.get('/', (req, res) => {
     Loan.findAll({
         include: [
             {model: Book},

@@ -6,14 +6,14 @@ block head
 block content
   h1 Loans
   p
-    a.button(href='/new_loan') Create New Loan
+    a.button(href='/loans/new_loan') Create New Loan
   p
     | Filters 
     a(href='/loans') All
     |  | 
-    a(href='/overdue_loans') Overdue
+    a(href='/loans/overdue_loans') Overdue
     |  | 
-    a(href='/checked_loans') Checked Out
+    a(href='/loans/checked_loans') Checked Out
   table
     thead
       tr
@@ -27,12 +27,12 @@ block content
       each loan in loans
         tr
           td
-            a(href=`/book_detail/${loan.Book.id}`) #{loan.Book.title}
+            a(href=`/books/book_detail/${loan.Book.id}`) #{loan.Book.title}
           td
-            a(href=`/patron_detail/${loan.Patron.id}`) #{loan.Patron.first_name}  #{loan.Patron.last_name}
+            a(href=`/patrons/patron_detail/${loan.Patron.id}`) #{loan.Patron.first_name}  #{loan.Patron.last_name}
           td #{loan.loaned_on}
           td #{loan.return_by}
           td #{loan.returned_on}
           td
             if !loan.returned_on
-              a.button(href=`/return_book/${loan.id}`) Return Book
+              a.button(href=`/loans/return_book/${loan.id}`) Return Book

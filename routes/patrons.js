@@ -8,7 +8,7 @@ const Patron = require("../models").Patron;
 // Patron routes
 
 // Show all patrons
-router.get('/patrons', (req, res) => {
+router.get('/', (req, res) => {
     Patron.findAll().then(patrons => {
         res.render('all_patrons', {patrons});
     }).catch(err => {

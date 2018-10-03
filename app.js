@@ -20,7 +20,10 @@ const index = require('./routes/index');
 const books = require('./routes/books');
 const patrons = require('./routes/patrons');
 const loans = require('./routes/loans');
-app.use(index, books, patrons, loans);
+app.use('/', index);
+app.use('/books', books);
+app.use('/patrons', patrons);
+app.use('/loans', loans);
 
 // Error handling route if no route is found
 app.use((req, res, next) => {

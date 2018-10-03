@@ -10,7 +10,7 @@ const Patron = require("../models").Patron;
 // Book routes
 
 // Show all books
-router.get('/books', (req, res) => {
+router.get('/', (req, res) => {
     Book.findAll().then(books => {
         res.render('all_books', {books});
     }).catch(err => {
