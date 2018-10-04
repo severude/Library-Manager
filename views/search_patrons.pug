@@ -1,10 +1,10 @@
 extends layout
 
 block head
-  title Patrons
+  title Patrons: Searched
 
 block content
-  h1 Patrons
+  h1 Patrons: Searched by '#{search}'
   form.search(method='POST' action='/patrons/search')
     input(type='search' class='searchBox' name='search' placeholder="Name, Address, Email,")
     input(type='submit' class='searchButton' value='Search')

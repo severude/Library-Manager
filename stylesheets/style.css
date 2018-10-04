@@ -95,3 +95,12 @@ input[type=text], select {
 .errors {
   color: red;
 }
+.search {
+  margin-bottom: 2.5em;
+}
+.search .searchBox {
+  margin-left: 0;
+}
+.search .searchButton {
+  margin-left: .1825em;
+}

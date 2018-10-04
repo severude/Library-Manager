@@ -130,4 +130,39 @@ router.put('/book_detail/:id', (req, res, next) => {
     });
 });
 
+// Show book search results
+router.post('/search', (req, res, next) => {
+    const {search} = req.body;
+    Book.findAll({
+        where: {
+            [Op.or]: [
+                {
+                    title: { 
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    author: { 
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    genre: { 
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    first_published: { 
+                        [Op.like]: `%${search}%`
+                    }
+                }
+            ]
+        }
+    }).then(books => {
+        res.render('search_books', {books, search});
+    }).catch(err => {
+        res.status(500);
+    });
+});
+
 module.exports = router;

@@ -1,10 +1,10 @@
 extends layout
 
 block head
-  title Checked Out Books
+  title Books: Searched
 
 block content
-  h1 Checked Out Books
+  h1 Books: Searched by '#{search}'
   form.search(method='POST' action='/books/search')
     input(type='search' class='searchBox' name='search' placeholder="Title, Author, Genre...")
     input(type='submit' class='searchButton' value='Search')

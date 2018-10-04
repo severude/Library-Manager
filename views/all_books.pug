@@ -5,8 +5,10 @@ block head
 
 block content
   h1 Books
-  p
-    a.button(href='/books/new_book') Create New Book
+  form.search(method='POST' action='/books/search')
+    input(type='search' class='searchBox' name='search' placeholder="Title, Author, Genre...")
+    input(type='submit' class='searchButton' value='Search')
+  a.button(href='/books/new_book') Create New Book
   p
     | Filters 
     a(href='/books') All

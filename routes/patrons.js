@@ -1,6 +1,8 @@
 // Routing declarations
 const express = require('express');
 const router = express.Router();
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 const Book = require("../models").Book;
 const Loan = require("../models").Loan;
 const Patron = require("../models").Patron;
@@ -83,6 +85,51 @@ router.put('/patron_detail/:id', (req, res, next) => {
                 } else {
             throw(err);
         }
+    });
+});
+
+// Show patron search results
+router.post('/search', (req, res, next) => {
+    const {search} = req.body;
+    Patron.findAll({
+        where: {
+            [Op.or]: [
+                {
+                    first_name: { 
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    last_name: { 
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    address: { 
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    email: { 
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    library_id: { 
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {
+                    zip_code: { 
+                        [Op.like]: `%${search}%`
+                    }
+                }
+            ]
+        }
+    }).then(patrons => {
+        res.render('search_patrons', {patrons, search});
+    }).catch(err => {
+        res.status(500);
     });
 });
 
