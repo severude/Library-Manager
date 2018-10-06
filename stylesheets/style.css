@@ -104,3 +104,16 @@ input[type=text], select {
 .search .searchButton {
   margin-left: .1825em;
 }
+.pagination li {
+  display: inline;
+}
+.pagination li a {
+  padding: 3px 8px;
+  border: 1px solid #eaeaea;
+  border-radius: 5px;
+}
+.pagination li a.active,
+.pagination li a:hover {
+  background-color: #019875;
+  color: #fff;
+}

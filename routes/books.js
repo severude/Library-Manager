@@ -11,8 +11,28 @@ const Patron = require("../models").Patron;
 
 // Show all books
 router.get('/', (req, res) => {
-    Book.findAll().then(books => {
-        res.render('all_books', {books});
+    res.redirect('/books/page-1');
+});
+
+// Show all books with paging
+router.get('/page-:page', (req, res) => {
+    let limit = 3;
+    let offset = 0;
+    let pages = [];
+    Book.findAndCountAll().then(books => {
+        let activePage = req.params.page;
+        let totalPages = Math.ceil(books.count / limit);
+        for(let index = 1; index <= totalPages; index++) {
+            pages.push(index);
+        }
+        offset = limit * (activePage - 1);
+        Book.findAll({
+            limit: limit,
+            offset: offset
+        })
+        .then(books => {
+            res.render('all_books', {books, activePage, pages});
+        })
     }).catch(err => {
         res.status(500);
     });

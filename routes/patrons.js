@@ -11,8 +11,28 @@ const Patron = require("../models").Patron;
 
 // Show all patrons
 router.get('/', (req, res) => {
-    Patron.findAll().then(patrons => {
-        res.render('all_patrons', {patrons});
+    res.redirect('/patrons/page-1');
+});
+
+// Show all patrons with paging
+router.get('/page-:page', (req, res) => {
+    let limit = 3;
+    let offset = 0;
+    let pages = [];
+    Patron.findAndCountAll().then(patrons => {
+        let activePage = req.params.page;
+        let totalPages = Math.ceil(patrons.count / limit);
+        for(let index = 1; index <= totalPages; index++) {
+            pages.push(index);
+        }
+        offset = limit * (activePage - 1);
+        Patron.findAll({
+            limit: limit,
+            offset: offset
+        })
+        .then(patrons => {
+            res.render('all_patrons', {patrons, activePage, pages});
+        })
     }).catch(err => {
         res.status(500);
     });
