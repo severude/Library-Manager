@@ -6,6 +6,7 @@ const Op = Sequelize.Op;
 const Book = require("../models").Book;
 const Loan = require("../models").Loan;
 const Patron = require("../models").Patron;
+let limit = 3;  // Default page limit
 
 // Patron routes
 
@@ -16,16 +17,14 @@ router.get('/', (req, res) => {
 
 // Show all patrons with paging
 router.get('/page-:page', (req, res) => {
-    let limit = 3;
-    let offset = 0;
-    let pages = [];
     Patron.findAndCountAll().then(patrons => {
         let activePage = req.params.page;
         let totalPages = Math.ceil(patrons.count / limit);
+        let offset = limit * (activePage - 1);
+        let pages = [];
         for(let index = 1; index <= totalPages; index++) {
             pages.push(index);
         }
-        offset = limit * (activePage - 1);
         Patron.findAll({
             limit: limit,
             offset: offset
