@@ -64,7 +64,12 @@ router.post('/new_book', (req, res, next) => {
 
 // Show all checked out books
 router.get('/checked_books', (req, res) => {
-    Book.findAll({
+    res.redirect('/books/checked_books/page-1');
+});
+
+// Show all checked out books with paging
+router.get('/checked_books/page-:page', (req, res) => {
+    Book.findAndCountAll({
         include: [{
             model: Loan,
             where: {
@@ -77,7 +82,31 @@ router.get('/checked_books', (req, res) => {
             }
         }]
     }).then(books => {
-        res.render('checked_books', {books});
+        let activePage = req.params.page;
+        let totalPages = Math.ceil(books.count / limit);
+        let offset = limit * (activePage - 1);
+        let pages = [];
+        for(let index = 1; index <= totalPages; index++) {
+            pages.push(index);
+        }
+        Book.findAll({
+            include: [{
+                model: Loan,
+                where: {
+                    loaned_on: { 
+                        [Op.lt]: Date.now() 
+                    },
+                    returned_on: { 
+                        [Op.eq]: null 
+                    }
+                }
+            }],
+            limit: limit,
+            offset: offset
+        })
+        .then(books => {
+            res.render('checked_books', {books, activePage, pages});
+        })
     }).catch(err => {
         res.status(500);
     });
@@ -85,7 +114,12 @@ router.get('/checked_books', (req, res) => {
 
 // Show all overdue books
 router.get('/overdue_books', (req, res) => {
-    Book.findAll({
+    res.redirect('/books/overdue_books/page-1');
+});
+
+// Show all overdue books with paging
+router.get('/overdue_books/page-:page', (req, res) => {
+    Book.findAndCountAll({
         include: [{
             model: Loan,
             where: {
@@ -98,7 +132,31 @@ router.get('/overdue_books', (req, res) => {
             }
         }]
     }).then(books => {
-        res.render('overdue_books', {books});
+        let activePage = req.params.page;
+        let totalPages = Math.ceil(books.count / limit);
+        let offset = limit * (activePage - 1);
+        let pages = [];
+        for(let index = 1; index <= totalPages; index++) {
+            pages.push(index);
+        }
+        Book.findAll({
+            include: [{
+                model: Loan,
+                where: {
+                    return_by: { 
+                        [Op.lt]: Date.now() 
+                    },
+                    returned_on: { 
+                        [Op.eq]: null
+                    }
+                }
+                }],
+            limit: limit,
+            offset: offset
+        })
+        .then(books => {
+            res.render('overdue_books', {books, activePage, pages});
+        })
     }).catch(err => {
         res.status(500);
     });

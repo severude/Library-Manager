@@ -31,3 +31,11 @@ block content
           td #{book.author}
           td #{book.genre}
           td #{book.first_published}
+  if pages.length > 1
+    ul.pagination
+      each page in pages
+        li
+          if page == activePage
+            a(href=`/books/overdue_books/page-${page}` class='active') #{page}
+          else
+            a(href=`/books/overdue_books/page-${page}`) #{page}
