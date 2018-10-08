@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const moment = require('moment');
 const Book = require("../models").Book;
 const Loan = require("../models").Loan;
 const Patron = require("../models").Patron;
@@ -25,11 +26,8 @@ router.get('/', (req, res) => {
 
 // Form for new loan
 router.get('/new_loan', (req, res) => {
-    const date = new Date();
-    const today = date.toLocaleDateString();
-    date.setDate(date.getDate() + 7);
-    const dueDate = date.toLocaleDateString();    
-    
+    const today = moment().format('YYYY-MM-DD');
+    const dueDate = moment().add(7,'d').format('YYYY-MM-DD');
     Book.findAll()
     .then(books => {
         Patron.findAll()
@@ -78,6 +76,7 @@ router.post('/new_loan', (req, res, next) => {
 
 // Show all overdue loans
 router.get('/overdue_loans', (req, res) => {
+    const today = moment().format('YYYY-MM-DD');
     Loan.findAll({
         include: [
             {model: Book},
@@ -85,7 +84,7 @@ router.get('/overdue_loans', (req, res) => {
         ],
         where: {
             return_by: { 
-                [Op.lt]: Date.now() 
+                [Op.lt]: today 
             },
             returned_on: {
                 [Op.eq]: null
@@ -119,8 +118,7 @@ router.get('/checked_loans', (req, res) => {
 
 // Show form to return an individual book
 router.get('/return_book/:id', (req, res) => {
-    const date = new Date();
-    const today = date.toLocaleDateString();
+    const today = moment().format('YYYY-MM-DD');
     Loan.findOne({
         include: [
             {model: Book},
@@ -152,8 +150,7 @@ router.put('/return_book/:id', (req, res, next) => {
                     id: req.params.id
                 }
             }).then(loan => {
-                const date = new Date();
-                const today = date.toLocaleDateString();
+                const today = moment().format('YYYY-MM-DD');
                 res.render('return_book', {loan, returned_on:today, errors:err.errors});
             });
         } else {

@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const moment = require('moment');
 const Book = require("../models").Book;
 const Loan = require("../models").Loan;
 const Patron = require("../models").Patron;
@@ -69,12 +70,13 @@ router.get('/checked_books', (req, res) => {
 
 // Show all checked out books with paging
 router.get('/checked_books/page-:page', (req, res) => {
+    const today = moment().format('YYYY-MM-DD');
     Book.findAndCountAll({
         include: [{
             model: Loan,
             where: {
                 loaned_on: { 
-                    [Op.lt]: Date.now() 
+                    [Op.lt]: today
                 },
                 returned_on: { 
                     [Op.eq]: null 
@@ -94,7 +96,7 @@ router.get('/checked_books/page-:page', (req, res) => {
                 model: Loan,
                 where: {
                     loaned_on: { 
-                        [Op.lt]: Date.now() 
+                        [Op.lt]: today 
                     },
                     returned_on: { 
                         [Op.eq]: null 
@@ -119,12 +121,13 @@ router.get('/overdue_books', (req, res) => {
 
 // Show all overdue books with paging
 router.get('/overdue_books/page-:page', (req, res) => {
+    const today = moment().format('YYYY-MM-DD');
     Book.findAndCountAll({
         include: [{
             model: Loan,
             where: {
                 return_by: { 
-                    [Op.lt]: Date.now() 
+                    [Op.lt]: today 
                 },
                 returned_on: { 
                     [Op.eq]: null
@@ -144,7 +147,7 @@ router.get('/overdue_books/page-:page', (req, res) => {
                 model: Loan,
                 where: {
                     return_by: { 
-                        [Op.lt]: Date.now() 
+                        [Op.lt]: today 
                     },
                     returned_on: { 
                         [Op.eq]: null
